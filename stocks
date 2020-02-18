@@ -1,0 +1,114 @@
+import sqlite3
+import INVENTARIO
+import INVENTARIO2
+import INVENTARIO3
+import INVENTARIO4
+import INVENTARIO5
+import INVENTARIO6
+import ANTIGUEDAD
+import ARCHIVO_MAESTRO
+import AJUSTE
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+print(filename)
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def main():
+
+    os.system("cls")
+    while True:
+
+        print("    ")
+        print("--------------------------------------------")
+        print("             MENU PRINCIPAL")
+        print("--------------------------------------------")
+        print("1-  AGREGAR CODIGO E INSUMO AL CATALOGO:")
+        print("2-  ELIMINAR CODIGO E INSUMO DEL CATALOGO:")
+        print("3-  MOSTRAR CATALOGO COMPLETO ")
+        print("4-  BUSQUEDA DE INSUMOS Y CODIGOS")
+        print("5-  INGRESAR STOCK")
+        print("6-  CONSUMO DE STOCK")
+        print("7-  VER ANTIGUEDAD")
+        print("8-  MOSTRAR ARCHIVO MAESTRO")
+        print("9-  MOSTRAR INSUMOS EN PUNTO DE PEDIDO")
+        print("10- MOSTRAR INSUMOS EN STOCK DE SEGURIDAD")
+        print("11- AGREGAR COMPRAS")
+        print("12- MOSTRAR STOCKS SIN FILTRAR")
+        print("13- AJUSTE NEGATIVO")
+        print("14- AJUSTE POSITIVO")
+        print("15- SALIR")
+        print("---------------------------------------------")
+        print("       ")
+        opcion = input("Ingrese opcion:")
+        print("  ")
+        if opcion=="1":
+             os.system("cls")
+             INVENTARIO.agregar_catalogo()
+
+
+        elif opcion=="2":
+             os.system("cls")
+             INVENTARIO2.eliminar_catalogo()
+
+        elif opcion=="3":
+             os.system("cls")
+             INVENTARIO3.mostrar_catalogo()
+
+        elif opcion=="4":
+             os.system("cls")
+             INVENTARIO4.mostrar_codigo_insumo()
+
+        elif opcion=="5":
+             os.system("cls")
+             INVENTARIO5.agregar_insumo()
+
+        elif opcion=="6":
+            os.system("cls")
+            INVENTARIO6.consumo_insumo()
+
+        elif opcion=="7":
+            os.system("cls")
+            ANTIGUEDAD.ver_antiguedad()
+
+        elif opcion=="8":
+            os.system("cls")
+            ARCHIVO_MAESTRO.mostrar_maestro()
+
+        elif opcion=="9":
+            os.system("cls")
+            ARCHIVO_MAESTRO.punto_pedido()
+
+        elif opcion=="10":
+            os.system("cls")
+            ARCHIVO_MAESTRO.stock_seguridad()
+
+        elif opcion == "11":
+            os.system("cls")
+            ARCHIVO_MAESTRO.agregar_compras()
+
+
+        elif opcion=="12":
+            os.system("cls")
+            ARCHIVO_MAESTRO.stocks_sinfiltrar()
+
+        elif opcion=="13":
+            os.system("cls")
+            AJUSTE.ajuste_negativo()
+
+        elif opcion=="14":
+            os.system("cls")
+            AJUSTE.ajuste_positivo()
+
+        elif(opcion=="15"):
+            break
+
+        else:
+            os.system("cls")
+            print("------------------")
+            print("INGRESO INCORRECTO")
+            print("------------------")
+            print("     ")
+main()
