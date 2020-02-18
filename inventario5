@@ -1,0 +1,112 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def consumo_insumo():
+
+    while True:
+
+        codigo=input("Ingrese el codigo:(para volver ingrese cero)")
+        print("    ")
+        if codigo=="0":
+            os.system("cls")
+            break
+
+        if codigo.isdigit():
+            codigo=int(codigo)
+            c.execute('SELECT CODIGO FROM STOCKS;')
+            a=c.fetchall()
+
+            if (codigo,) in a:
+                c.execute('SELECT INSUMO FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                b=c.fetchall()
+                b=b[0]
+                b=b[0]
+                os.system("cls")
+                sino=input("El codigo que ingresaste corresponde a '{}' ?<si-no>".format(b))
+                print("    ")
+                sino=sino.upper()
+                if sino=="SI":
+                    break
+
+            else:
+                os.system("cls")
+                print("--------------------------------------------")
+                print("EL CODIGO '{}' NO SE ENCUENTRA EN STOCK".format(codigo))
+                print("--------------------------------------------")
+                print("      ")
+
+        else:
+            os.system("cls")
+            print("---------------------------------")
+            print("EL INGRESO '{}' NO ES UN NUMERO".format(codigo))
+            print("---------------------------------")
+            print("    ")
+
+
+    while True:
+        if codigo=="0":
+            break
+        os.system("cls")
+        consumo=input("Ingresa la cantidad de consumo:")
+        print("   ")
+        if consumo.isdigit():
+            consumo=int(consumo)
+            c.execute('UPDATE STOCKS SET CANTIDAD=CANTIDAD-{} WHERE CODIGO=={} AND CANTIDAD_MESES=(SELECT MIN(CANTIDAD_MESES)FROM STOCKS WHERE CODIGO=={} );'.format(consumo, codigo,codigo))
+            base.commit()
+            while True:
+                 c.execute('SELECT CANTIDAD FROM STOCKS WHERE CODIGO=={} AND CANTIDAD_MESES=(SELECT MIN(CANTIDAD_MESES) FROM STOCKS WHERE CODIGO=={});'.format(codigo,codigo))
+                 e=c.fetchall()
+                 e=e[0]
+                 e=e[0]
+
+                 if e>0:
+                     c.execute('UPDATE CATALOGO SET CONSUMO=CONSUMO+{} WHERE CODIGO={};'.format(consumo,codigo))
+                     base.commit()
+                     os.system("cls")
+                     print("------------------------------------")
+                     print("EL CONSUMO DE STOCK SE HA REALIZADO")
+                     print("------------------------------------")
+                     print("       ")
+                     break
+
+                 else:
+                     e=e*(-1)
+                     c.execute('DELETE FROM STOCKS WHERE CODIGO=={} AND CANTIDAD_MESES=(SELECT MIN(CANTIDAD_MESES) FROM STOCKS WHERE CODIGO=={});'.format(codigo,codigo))
+                     base.commit()
+
+                     c.execute('SELECT CODIGO FROM STOCKS;')
+                     f=c.fetchall()
+                     if (codigo,)in f:
+                            c.execute('UPDATE STOCKS SET CANTIDAD =CANTIDAD-{} WHERE CODIGO=={} AND CANTIDAD_MESES=(SELECT MIN(CANTIDAD_MESES) FROM STOCKS WHERE CODIGO=={})'.format(e,codigo,codigo))
+                            base.commit()
+                     else:
+
+                         consumo_real=consumo-e
+                         c.execute('UPDATE CATALOGO SET CONSUMO=CONSUMO+{} WHERE CODIGO={};'.format(consumo_real, codigo))
+                         base.commit()
+
+                         c.execute('INSERT INTO STOCKS (CODIGO,CANTIDAD,AÑO,MES,CANTIDAD_MESES)VALUES({},0,0,0,0);'.format(codigo))
+                         base.commit()
+
+                         os.system("cls")
+                         print("------------------------------------")
+                         print("EL CONSUMO DE STOCK SE HA REALIZADO")
+                         print("------------------------------------")
+                         print("      ")
+                         break
+
+            break
+
+
+
+        else:
+            os.system("cls")
+            print("-------------------------------")
+            print("EL INGRESO '{}' NO ES UN NUMERO".format(codigo))
+            print("-------------------------------")
+            print("    ")
