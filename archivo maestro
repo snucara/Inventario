@@ -1,0 +1,137 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def mostrar_maestro():
+    c.execute('SELECT CATALOGO.CODIGO,CATALOGO.INSUMO,STOCKS.CANTIDAD,STOCKS.AÑO,STOCKS.MES FROM CATALOGO,STOCKS WHERE CATALOGO.CODIGO=STOCKS.CODIGO ORDER BY CATALOGO.CODIGO;')
+    a=c.fetchall()
+    print("----------------------------------------------------")
+    print(" CODIGO       INSUMO           CANTIDAD   AÑO   MES")
+    print("----------------------------------------------------")
+    for i in a:
+        print(i[0],"  ",i[1],"  ",i[2],"  ",i[3],"  ",i[4])
+        print("---------------------------------------------------")
+
+
+
+def punto_pedido():
+    c.execute('SELECT CATALOGO.CODIGO ,CATALOGO.INSUMO,SUM(STOCKS.CANTIDAD),CATALOGO.COMPRAS,CATALOGO.PUNTO_PEDIDO FROM CATALOGO,STOCKS WHERE CATALOGO.CODIGO=STOCKS.CODIGO GROUP BY CATALOGO.CODIGO ;')
+    b=c.fetchall()
+    print("-------------------------------------------------------------------")
+    print("CODIGO    INSUMO              CANTIDAD    COMPRAS   PUNTO DE PEDIDO")
+    print("-------------------------------------------------------------------")
+    contador=0
+    for i in b:
+        d=b[contador]
+        d=d[2]
+        e=b[contador]
+        e=e[4]
+
+        contador=contador+1
+
+        if d<=e :
+            print(i[0],"    ",i[1],"    ",i[2],"        ",i[3],"       ",i[4])
+            print("--------------------------------------------------------------------")
+
+
+    print("    ")
+
+def stock_seguridad():
+    c.execute('SELECT CATALOGO.CODIGO ,CATALOGO.INSUMO,SUM(STOCKS.CANTIDAD),CATALOGO.STOCK_SEGURIDAD FROM CATALOGO,STOCKS WHERE CATALOGO.CODIGO=STOCKS.CODIGO GROUP BY CATALOGO.CODIGO ;')
+    b=c.fetchall()
+    print("----------------------------------------------------------")
+    print("CODIGO    INSUMO              CANTIDAD     STOCK SEGURIDAD")
+    print("----------------------------------------------------------")
+    contador=0
+    for i in b:
+        d=b[contador]
+        d=d[2]
+        e=b[contador]
+        e=e[3]
+        contador=contador+1
+
+        if  d<=e :
+            print(i[0],"    ",i[1],"    ",i[2],"    ",i[3])
+            print("------------------------------------------------------")
+
+
+    print("  ")
+
+def stocks_sinfiltrar():
+    c.execute('SELECT CATALOGO.CODIGO ,CATALOGO.INSUMO,SUM(STOCKS.CANTIDAD),CATALOGO.COMPRAS,CATALOGO.PUNTO_PEDIDO,CATALOGO.STOCK_SEGURIDAD,CATALOGO.CONSUMO,CATALOGO.AJUSTE FROM CATALOGO,STOCKS WHERE CATALOGO.CODIGO=STOCKS.CODIGO GROUP BY CATALOGO.CODIGO ;')
+    b=c.fetchall()
+    print("---------------------------------------------------------------------------------------------------------------")
+    print("CODIGO    INSUMO              CANTIDAD     COMPRAS     PUNTO PEDIDO   STOCK SEGURIDAD     CONSUMO       AJUSTE")
+    print("---------------------------------------------------------------------------------------------------------------")
+    contador=0
+    for i in b:
+        print(i[0],"    ",i[1],"    ",i[2],"           ",i[3],"          ",i[4],"       ",i[5],"             ",i[6],"           ",i[7])
+        print("----------------------------------------------------------------------------------------------------------------")
+
+
+
+
+
+
+
+def agregar_compras():
+
+    while True:
+
+        codigo = input("Ingrese el codigo del insumo para agregar COMPRAS:(para volver ingrese cero)")
+        print("   ")
+        if codigo == "0":
+            os.system("cls")
+            break
+
+        c.execute('SELECT CODIGO FROM CATALOGO;')
+        a = c.fetchall()
+
+        if codigo.isdigit():
+            codigo = int(codigo)
+            if (codigo,) in a:
+                c.execute('SELECT INSUMO FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                b = c.fetchall()
+                b = b[0]
+                b = b[0]
+                os.system("cls")
+                sino = input("¿El codigo que ingresaste corresponde al insumo:{}?<si-no>".format(b))
+                print("    ")
+                sino = sino.upper()
+                if sino == "SI":
+                    compras=input("Ingresa la cantidad comprada:")
+                    if compras.isdigit():
+                            c.execute('UPDATE CATALOGO SET COMPRAS=COMPRAS+{} WHERE CODIGO={};'.format(compras,codigo))
+                            base.commit()
+                            os.system("cls")
+                            print("---------------------------------------")
+                            print("    LAS COMPRAS HAN SIDO INGRESADAS")
+                            print("---------------------------------------")
+                            print("         ")
+                            break
+                    else:
+                        os.system("cls")
+                        print("-----------------------------------")
+                        print(" EL INGRESO '{}' NO ES UN NUMERO".format(compras))
+                        print("-----------------------------------")
+                        print("       ")
+                else:
+                    os.system("cls")
+
+            else:
+                os.system("cls")
+                print("-----------------------------------------")
+                print("EL CODIGO '{}' NO EXISTE EN EL CATALOGO".format(codigo))
+                print("-----------------------------------------")
+                print("        ")
+        else:
+            os.system("cls")
+            print("------------------------------------------------")
+            print("EL INGRESO '{}' NO ES UN NUMERO ".format(codigo))
+            print("------------------------------------------------")
+            print("        ")
+
