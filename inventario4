@@ -1,0 +1,90 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def mostrar_codigo_insumo():
+
+
+    while True:
+
+          print("1- BUSCAR INSUMO POR CODIGO:")
+          print("2- BUSCAR CODIGO POR INSUMO:")
+          print("3- VOLVER AL MENU")
+          opcion=input("Ingrese opcion:")
+          print("    ")
+          if opcion=="1":
+               os.system("cls")
+               codigo=input("Ingrese codigo:")
+               print("    ")
+               if codigo.isdigit():
+                      codigo=int(codigo)
+                      c.execute('SELECT CODIGO FROM CATALOGO;')
+                      b=c.fetchall()
+                      if (codigo,) in b:
+                            c.execute('SELECT INSUMO FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                            a=c.fetchall()
+                            a=a[0]
+                            a=a[0]
+                            os.system("cls")
+                            print("==========================================")
+                            print("El insumo buscado es: ",a)
+                            print("==========================================")
+                            print("        ")
+                      else:
+                            os.system("cls")
+                            print("--------------------------------------------")
+                            print("EL CODIGO INGRESADO NO EXISTE EN EL CATALOGO")
+                            print("--------------------------------------------")
+                            print("      ")
+               else:
+                   os.system("cls")
+                   print("---------------------------------------------")
+                   print("EL INGRESO '{}'NO ES UN NUMERO".format(codigo))
+                   print("---------------------------------------------")
+                   print("      ")
+
+          elif opcion=="2":
+              os.system("cls")
+              insumo= input("Ingrese insumo(descripcion):")
+              print("   ")
+              if not insumo.isdigit():
+                  insumo=insumo.upper()
+                  c.execute('SELECT INSUMO FROM CATALOGO;')
+                  b = c.fetchall()
+                  if (insumo,) in b:
+                      c.execute('SELECT CODIGO FROM CATALOGO WHERE INSUMO="{}";'.format(insumo))
+                      a = c.fetchall()
+                      a = a[0]
+                      a = a[0]
+                      os.system("cls")
+                      print("==========================================")
+                      print("El codigo buscado es: ", a)
+                      print("==========================================")
+                      print("      ")
+                  else:
+                      os.system("cls")
+                      print("---------------------------------------------------------------------------")
+                      print("EL INSUMO '{}' NO EXISTE O NO ESTA ESCRITO COMO SE REGISTRO".format(insumo))
+                      print("---------------------------------------------------------------------------")
+                      print("      ")
+              else:
+                  os.system("cls")
+                  print("---------------------------------------------------------")
+                  print("EL INGRESO '{}' NO PUEDE TENER SOLO NUMEROS".format(insumo))
+                  print("---------------------------------------------------------")
+                  print("       ")
+
+          elif opcion=="3":
+              os.system("cls")
+              break
+
+          else:
+              os.system("cls")
+              print("------------------")
+              print("INGRESO INCORRECTO")
+              print("------------------")
+              print("       ")
