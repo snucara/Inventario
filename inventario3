@@ -1,0 +1,21 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def mostrar_catalogo():
+
+    c.execute('SELECT CODIGO, INSUMO FROM CATALOGO;')
+    a=c.fetchall()
+    print("=============================")
+    print("CODIGO          INSUMO      ")
+    print("=============================")
+    for i in a:
+        print(i[0],"   ",i[1])
+        print("-----------------------------")
+
+
+    print("   ")
