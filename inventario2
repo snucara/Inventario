@@ -1,0 +1,61 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+
+
+def eliminar_catalogo():
+
+       while True:
+
+             codigo=input("Ingrese el codigo del insumo para eliminar:(para volver ingrese cero)")
+             print("   ")
+             if codigo=="0":
+                 os.system("cls")
+                 break
+
+
+             c.execute('SELECT CODIGO FROM CATALOGO;')
+             a = c.fetchall()
+
+
+             if codigo.isdigit():
+                 codigo = int(codigo)
+                 if (codigo,)in a:
+                     c.execute('SELECT INSUMO FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                     b = c.fetchall()
+                     b=b[0]
+                     b=b[0]
+                     os.system("cls")
+                     sino=input("¿El codigo que ingresaste corresponde al insumo:{}?<si-no>".format(b))
+                     print("    ")
+                     sino=sino.upper()
+                     if sino=="SI":
+                         c.execute('DELETE FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                         base.commit()
+                         os.system("cls")
+                         print("--------------------------------------------------------------------------------------")
+                         print("EL CODIGO,INSUMO,PUNTO DE PEDIDO Y STOCK DE SEGURIDAD HAN SIDO ELIMINADOS DEL CATALOGO")
+                         print("--------------------------------------------------------------------------------------")
+                         print("         ")
+                         break
+                     else:
+                         os.system("cls")
+
+                 else:
+                     os.system("cls")
+                     print("------------------------------------------------------------")
+                     print("EL CODIGO '{}' NO SE ELIMINO PORQUE NO EXISTE EN EL CATALOGO".format(codigo))
+                     print("------------------------------------------------------------")
+                     print("        ")
+             else:
+                  os.system("cls")
+                  print("------------------------------------------------")
+                  print("EL INGRESO '{}' NO ES UN NUMERO ".format(codigo))
+                  print("------------------------------------------------")
+                  print("        ")
+
