@@ -1,0 +1,113 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def agregar_catalogo():
+
+     while True:
+
+         while True:
+             os.system("cls")
+             codigo=input("Ingrese el codigo del insumo para agregar(para volver ingrese cero):")
+             print("     ")
+             if codigo=="0":
+                 os.system("cls")
+                 break
+
+             c.execute('SELECT CODIGO FROM CATALOGO;')
+             a = c.fetchall()
+
+             if codigo.isdigit():
+                 codigo=int(codigo)
+                 if not(codigo,)in a:
+                     break
+                 else:
+                     os.system("cls")
+                     print("---------------------------------------------------------------------")
+                     print("EL INGRESO '{}' CORRESPONDE A UN CODIGO ASIGNADO ANTERIORMENTE".format(codigo))
+                     print("---------------------------------------------------------------------")
+                     print("       ")
+             else:
+                  os.system("cls")
+                  print("--------------------------------------")
+                  print("EL INGRESO '{}' NO ES UN NUMERO ".format(codigo))
+                  print("---------------------------------------")
+                  print("       ")
+
+         while True:
+             if codigo=="0":
+                 break
+
+             os.system("cls")
+             descripcion=input("Ingrese el nombre del insumo:")
+             print("     ")
+             if not descripcion.isdigit():
+                  descripcion=descripcion.upper()
+                  break
+
+             else:
+                  os.system("cls")
+                  print("-------------------------------------------------------------------")
+                  print("'{}' NO ES ACEPTADO PORQUE NO PUEDE SER SOLO NUMEROS".format(descripcion))
+                  print("-------------------------------------------------------------------")
+                  print("        ")
+
+
+         while True:
+             if codigo=="0":
+                 break
+
+             os.system("cls")
+             punto_pedido=input("Ingrese el punto de pedido del insumo:")
+             print("    ")
+             if punto_pedido.isdigit():
+                  punto_pedido=int(punto_pedido)
+                  break
+
+             else:
+                 os.system("cls")
+                 print("----------------------------------------")
+                 print("EL INGRESO '{}'NO ES UN NUMERO".format(punto_pedido))
+                 print("----------------------------------------")
+                 print("      ")
+
+         while True:
+              if codigo == "0":
+                  break
+
+              os.system("cls")
+              stock_seguridad = input("Ingrese el stock de seguridad del insumo:")
+              print("    ")
+              if stock_seguridad.isdigit():
+                   stock_seguridad = int(stock_seguridad)
+                   break
+
+              else:
+                   os.system("cls")
+                   print("--------------------------------------------")
+                   print("EL INGRESO '{}'NO ES UN NUMERO".format(stock_seguridad))
+                   print("---------------------------------------------")
+                   print("    ")
+
+         if codigo=="0":
+             break
+
+
+
+         c.execute(
+                 'INSERT INTO CATALOGO(CODIGO,INSUMO,PUNTO_PEDIDO,STOCK_SEGURIDAD,COMPRAS,CONSUMO,AJUSTE)VALUES({},"{}",{},{},0,0,0);'.format(codigo,
+                                                                                                                 descripcion,
+                                                                                                                 punto_pedido,
+                                                                                                                 stock_seguridad))
+         base.commit()
+         os.system("cls")
+         print("-------------------------------------------------------------------------------------")
+         print("EL CODIGO,INSUMO,PUNTO DE PEDIDO Y STOCK DE SEGURIDAD HAN SIDO INGRESADOS AL CATALOGO")
+         print("-------------------------------------------------------------------------------------")
+         print("       ")
+         break
+
