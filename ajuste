@@ -1,0 +1,154 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+
+def ajuste_negativo():
+
+
+           while True:
+
+               codigo=input("Ingrese el codigo:(para volver ingrese cero)")
+               print("   ")
+               if codigo=="0":
+                   os.system("cls")
+                   break
+
+               if codigo.isdigit():
+                  codigo=int(codigo)
+                  c.execute('SELECT CODIGO FROM CATALOGO;')
+                  a=c.fetchall()
+
+                  if (codigo,) in a:
+                      c.execute('SELECT INSUMO FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                      b = c.fetchall()
+                      b = b[0]
+                      b = b[0]
+                      os.system("cls")
+                      sino=input("¿El codigo que ingresaste corresponde a: '{}' ?<si-no>".format(b))
+                      print("    ")
+                      sino=sino.upper()
+                      if sino=="SI":
+                          break
+
+
+
+                  else:
+                      os.system("cls")
+                      print("---------------------------------------")
+                      print("EL CODIGO '{}' NO EXISTE EN EL CATALOGO".format(codigo))
+                      print("---------------------------------------")
+                      print("       ")
+
+               else:
+                   os.system("cls")
+                   print("-------------------------------")
+                   print("EL INGRESO '{}' NO ES UN NUMERO".format(codigo))
+                   print("-------------------------------")
+                   print("       ")
+
+
+           while True:
+
+               if codigo=="0":
+                   break
+
+
+               cantidad=input("Ingrese la cantidad de AJUSTE NEGATIVO:")
+               print("    ")
+               if  cantidad.isdigit():
+                    cantidad=int(cantidad)
+                    c.execute('UPDATE CATALOGO SET AJUSTE=AJUSTE-{} WHERE CODIGO={}'.format(cantidad, codigo))
+                    base.commit()
+                    c.execute('UPDATE STOCKS SET CANTIDAD=CANTIDAD-{} WHERE CODIGO={} AND CANTIDAD_MESES=(SELECT MIN(CANTIDAD_MESES) FROM STOCKS WHERE CODIGO={});'.format(cantidad, codigo,codigo))
+                    base.commit()
+                    os.system("cls")
+                    print("----------------------------------------")
+                    print("LOS DATOS SE HAN INGRESADO CORRECTAMENTE")
+                    print("----------------------------------------")
+                    print("    ")
+                    break
+
+               else:
+                   os.system("cls")
+                   print("-----------------------------------")
+                   print("EL INGRESO '{}' NO ES UN NUMERO".format(cantidad))
+                   print("----------------------------------")
+                   print("         ")
+
+
+
+
+def ajuste_positivo():
+    while True:
+
+        codigo = input("Ingrese el codigo:(para volver ingrese cero)")
+        print("   ")
+        if codigo == "0":
+            os.system("cls")
+            break
+
+        if codigo.isdigit():
+            codigo = int(codigo)
+            c.execute('SELECT CODIGO FROM CATALOGO;')
+            a = c.fetchall()
+
+            if (codigo,) in a:
+                c.execute('SELECT INSUMO FROM CATALOGO WHERE CODIGO={};'.format(codigo))
+                b = c.fetchall()
+                b = b[0]
+                b = b[0]
+                os.system("cls")
+                sino = input("¿El codigo que ingresaste corresponde a: '{}' ?<si-no>".format(b))
+                print("    ")
+                sino = sino.upper()
+                if sino == "SI":
+                    break
+
+
+
+            else:
+                os.system("cls")
+                print("---------------------------------------")
+                print("EL CODIGO '{}' NO EXISTE EN EL CATALOGO".format(codigo))
+                print("---------------------------------------")
+                print("       ")
+
+        else:
+            os.system("cls")
+            print("-------------------------------")
+            print("EL INGRESO '{}' NO ES UN NUMERO".format(codigo))
+            print("-------------------------------")
+            print("       ")
+
+    while True:
+
+        if codigo == "0":
+            break
+
+        cantidad = input("Ingrese la cantidad de AJUSTE POSITIVO:")
+        print("    ")
+        if cantidad.isdigit():
+            cantidad = int(cantidad)
+            c.execute('UPDATE CATALOGO SET AJUSTE=AJUSTE+{} WHERE CODIGO={}'.format(cantidad, codigo))
+            base.commit()
+            c.execute('UPDATE STOCKS SET CANTIDAD=CANTIDAD+{} WHERE CODIGO={} AND CANTIDAD_MESES=(SELECT MIN(CANTIDAD_MESES) FROM STOCKS WHERE CODIGO={});'.format(cantidad, codigo, codigo))
+            base.commit()
+            os.system("cls")
+            print("----------------------------------------")
+            print("LOS DATOS SE HAN INGRESADO CORRECTAMENTE")
+            print("----------------------------------------")
+            print("    ")
+            break
+
+        else:
+            os.system("cls")
+            print("-----------------------------------")
+            print("EL INGRESO '{}' NO ES UN NUMERO".format(cantidad))
+            print("----------------------------------")
+            print("         ")
+
