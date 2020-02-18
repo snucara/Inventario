@@ -1,0 +1,96 @@
+import sqlite3
+import os
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'BASE.db')
+base = sqlite3.connect(filename)
+c = base.cursor()
+
+def ver_antiguedad():
+
+
+        while True:
+            año=input("Ingresa el AÑO actual:")
+            if(año.isdigit() and len(año)==4):
+                año=int(año)
+                if año>=1970 and año<=2030:
+                    break
+                else:
+                    print("-------------------------------")
+                    print("EL INGRESO '{}' NO ES VALIDO ".format(año))
+                    print("------------------------------")
+                    print("        ")
+            else:
+                print("-------------------------------")
+                print("EL INGRESO '{}' NO ES VALIDO ".format(año))
+                print("------------------------------")
+                print("        ")
+
+
+
+
+        while True:
+            mes = input("Ingresa el MES actual:")
+            if (mes.isdigit() and len(mes) <= 2):
+                mes = int(mes)
+                if mes >= 1 and mes <=12:
+                    break
+                else:
+                    print("-------------------------------")
+                    print("EL INGRESO '{}' NO ES VALIDO ".format(mes))
+                    print("------------------------------")
+                    print("        ")
+            else:
+                print("-------------------------------")
+                print("EL INGRESO '{}' NO ES VALIDO ".format(mes))
+                print("------------------------------")
+                print("        ")
+
+
+
+        cantidad_meses=(año*12)+mes
+
+        c.execute('SELECT CATALOGO.CODIGO,CATALOGO.INSUMO,STOCKS.CANTIDAD,STOCKS.CANTIDAD_MESES FROM CATALOGO,STOCKS WHERE CATALOGO.CODIGO=STOCKS.CODIGO;')
+        a=c.fetchall()
+        print("-------------------------------------------------------------------------------------------------------")
+        print("CODIGO            INSUMO                STOCK          + 3 MESES    + 6 MESES     + 9 MESES    + 1 AÑO")
+        print("-------------------------------------------------------------------------------------------------------")
+        contador=0
+        for i in a:
+             b = a[contador]
+             b = b[3]
+             contador=contador+1
+             if (cantidad_meses - b) >3 and (cantidad_meses - b )<=6:
+                    print(i[0],"       ",i[1])
+                    print("                                        ",i[2],"             x   ")
+                    print("-------------------------------------------------------------------------------------------------------")
+
+        contador=0
+        for i in a:
+             b = a[contador]
+             b = b[3]
+             contador=contador+1
+             if (cantidad_meses - b) >6 and (cantidad_meses - b) <=9:
+                    print(i[0],"       ",i[1])
+                    print("                                        ",i[2],"                           x   ")
+                    print("-------------------------------------------------------------------------------------------------------")
+
+        contador=0
+        for i in a:
+             b = a[contador]
+             b = b[3]
+             contador=contador+1
+             if (cantidad_meses - b )>9 and (cantidad_meses - b) <=12:
+                    print(i[0],"       ",i[1])
+                    print("                                         ",i[2],"                                          x   ")
+                    print("-------------------------------------------------------------------------------------------------------")
+
+        contador=0
+        for i in a:
+             b = a[contador]
+             b = b[3]
+             contador=contador+1
+             if (cantidad_meses - b) >12:
+                    print(i[0],"         ",i[1])
+                    print("                                         ",i[2],"                                                   x   ")
+                    print("-------------------------------------------------------------------------------------------------------")
